@@ -3,36 +3,7 @@
 #include <stdarg.h>
 
 #include "logging.h"
-
-// token_kind is a list of the different tokens supported
-typedef enum token_kind {
-  SQUIG,
-  MULTIPLY,
-  DIVIDE,
-  MODULO,
-  RIGHT_SHIFT,
-  LEFT_SHIFT,
-  BIN_AND,
-  ADD,
-  SUBTRACT,
-  BIN_OR,
-  POW
-} token_kind;
-
-// token_kind_names is an array of the strings in token_kind
-const char * token_kind_names[] = {
-  [SQUIG] = "~",
-  [MULTIPLY] = "*",
-  [DIVIDE] = "/",
-  [MODULO] = "%",
-  [RIGHT_SHIFT] = ">>",
-  [LEFT_SHIFT] = "<<",
-  [BIN_AND] = "&",
-  [ADD] = "+",
-  [SUBTRACT] = "-",
-  [BIN_OR] = "|",
-  [POW] = "^"
-};
+#include "tokenizer.h"
 
 // ptree_node is a tree of a parse tree
 typedef struct ptree_node {
