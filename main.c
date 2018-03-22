@@ -4,8 +4,6 @@
 
 #include "logging.h"
 
-#define LOG_FILE "log.txt"
-
 // token_kind is a list of the different tokens supported
 typedef enum token_kind {
   SQUIG,
@@ -43,13 +41,14 @@ typedef struct ptree_node {
 } ptree_node;
 
 const char * parse_expr(char * to_parse) {
-  s_log("Parsing expression %s\n", to_parse);
+  s_log("Parsing expression %s", to_parse);
   return to_parse;
 }
 
 int main( int argc, char ** argv ) {
   init_logging(LOG_FILE);
   if( argc < 2 ) {
+    s_log("No input from user");
     printf("[first arg] -- string to parse\n");
   } else {
     printf("%s\n", parse_expr(argv[1]));
