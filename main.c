@@ -38,6 +38,7 @@ const char * token_kind_names[] = {
 typedef struct ptree_node {
   struct ptree_node * right;
   struct ptree_node * left;
+  token_kind tok;
 } ptree_node;
 
 const char * parse_expr(char * to_parse) {
