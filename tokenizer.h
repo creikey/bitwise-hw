@@ -2,6 +2,7 @@
 #define H_TOKENIZER
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 // token_kind is a list of the different tokens supported
 typedef enum token_kind {
@@ -30,7 +31,8 @@ typedef struct token {
 // arr_token is a sized array of tokens
 typedef struct arr_token {
   token *toks;
-  int len;
+  size_t len;
+  size_t max_len;
 } arr_token;
 
 // tokenize is a function that takes in a stream of characters and returns an

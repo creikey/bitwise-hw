@@ -24,7 +24,7 @@ arr_token tokenize(char * to_tokenize) {
     return to_return;
   }
   // make toks an array of malloc
-  to_return.toks = malloc(sizeof(*to_return.toks) * strlen(to_tokenize));
+  to_return.toks = malloc(sizeof(*to_return.toks));
   // tokcur is the current token that's being appended
   int tokcur = 0;
   // cur is a variable that holds the current token
@@ -114,4 +114,15 @@ int num_places (int n) {
     /*      2147483647 is 2^31-1 - add more ifs as needed
        and adjust this final return as well. */
     return 10;
+}
+
+void append_token(arr_token to_append_to, token to_append) {
+  // if the current length is greater or equal to the maximum length
+  if( to_append_to.len >= to_append_to.max_len ) {
+    // resize the array of tokens to twice its max size
+    to_append_to.toks = realloc(to_append_to.toks, to_append_to.max_len*2);
+    to_append_to.max_len = to_append_to.max_len*2;
+  }
+  to_append_to.toks[to_append_to.len] = to_append;
+  to_append_to.toks++;
 }
