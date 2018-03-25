@@ -23,9 +23,22 @@ FILE *log_fp;
   fprintf(log_fp, to_log, ##__VA_ARGS__);                                      \
   fprintf(stderr, to_log, ##__VA_ARGS__);                                      \
   free(to_log);
-#else // DEBUG_MODE
+#else // LOG_DEBUG_MODE
 #define s_log(...)
-#endif // DEBUG_MODE
+#endif // LOG_DEBUG_MODE
+
+#ifdef LOG_DEBUG_PEDANTIC
+// p_log is the same as s_log but pedantic
+#define p_log(fmt, ...)                                                        \
+  assert(log_fp != NULL);                                                      \
+  char *to_log = strcat(get_pedantic_log_prefix(strlen(fmt)), fmt);            \
+  to_log = strcat(to_log, "\n");                                               \
+  fprintf(log_fp, to_log, ##__VA_ARGS__);                                      \
+  fprintf(stderr, to_log, ##__VA_ARGS__);                                      \
+  free(to_log);
+#else
+#define p_log(...)
+#endif // LOG_DEBUG_PEDANTIC
 
 // Opens and closes log file
 void init_logging(const char *log_file_name);
