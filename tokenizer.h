@@ -35,6 +35,9 @@ typedef struct arr_token {
   size_t max_len;
 } arr_token;
 
+// append_token appends the input token to the input token flexy buffer
+void append_token(arr_token to_append_to, token to_append);
+
 // tokenize is a function that takes in a stream of characters and returns an
 // array of tokens
 arr_token tokenize(char *to_tokenize);
@@ -54,5 +57,8 @@ int num_places(int n);
 
 // resolve_numb resolves a number of n length from an input string and cursor
 int resolve_numb(char *charstream, int cur);
+
+// get_max_tok_len takes in an array of strings to find the maximum length
+int get_max_tok_len(const char *to_find_max_len[]);
 
 #endif // H_TOKENIZER

@@ -1,4 +1,5 @@
 #include "tokenizer.h"
+#include "logging.h"
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
@@ -23,29 +24,47 @@ arr_token tokenize(char * to_tokenize) {
   if(to_tokenize == NULL) {
     return to_return;
   }
-  // make toks an array of malloc
+  // make toks an array of malloc equal to one token
   to_return.toks = malloc(sizeof(*to_return.toks));
-  // tokcur is the current token that's being appended
-  int tokcur = 0;
   // cur is a variable that holds the current token
   token cur;
+  // cur_tok_kind is a variable that holds the current token kind
+  token_kind cur_tok_kind;
+  // max_tok_len is the maximum character length of any token
+  int max_tok_len = get_max_tok_len(token_kind_names);
+  // cur_str is the current string to ber passed to get_toke_kind
+  char * cur_str = malloc(sizeof(*cur_str) * (max_tok_len+1));
   // loop over the input string
   for( unsigned int  i = 0; i < strlen(to_tokenize); i++ ) {
-    // get the kind of the current character and set it to the cur.kind
-    cur.kind = get_token_kind(to_tokenize[i]);
-    // resolve the number if a number is found
-    if(cur.kind == NUMBER) {
-      cur.val = resolve_numb(to_tokenize, i);
-      // subtract one because one 'i' will be added in the future
-      i += num_places(cur.val)-1;
-    } else {
-      cur.val = 0;
+    // ii is the iterator for the cur_tok_kind loop
+    unsigned int ii;
+    // loop over possible amount of characters
+    for( ii = 1; ii <= max_tok_len; ii++ ) {
+      strncpy(cur_str, to_tokenize, ii); // copy string into buffer
+      cur_str[ii] = 0; // null terminate string
+      cur_tok_kind = get_token_kind(cur_str); // get the token kind
+      if(cur_tok_kind != UNKNOWN) { // if it's not unknown, exit the for loop
+        break;
+      }
     }
-    // append another token
-    to_return.toks[tokcur] = cur;
-    tokcur++;
+    if( cur_tok_kind == UNKNOWN ) {
+      s_log("Unknown token %s", cur_str);
+    } else if( cur_tok_kind == NUMBER ) {
+      // set the curren token's val
+      cur.val = resolve_numb(to_tokenize, i);
+    i += ii; // advance the current counter so it's the token ahead
   }
   return to_return;
+}
+
+int get_max_tok_len(const char ** to_find_max_len) {
+  unsigned int cur_max_len = 0;
+  for(unsigned int i = 0; i < sizeof(to_find_max_len)*sizeof(*to_find_max_len); i++) {
+    if(strlen(to_find_max_len[i]) > cur_max_len) {
+      cur_max_len = strlen(to_find_max_len[i]);
+    }
+  }
+  return cur_max_len;
 }
 
 // TODO add negative support
