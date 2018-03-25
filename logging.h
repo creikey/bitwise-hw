@@ -20,11 +20,13 @@ char *get_testing_log_prefix(int size_of_line, int log_line,
 // log_fp is the file pointer to the log file
 FILE *log_fp;
 
+char *to_log;
+
 #ifdef LOG_DEBUG_MODE
 // s_log is a standard function to print to stderr and log
 #define s_log(fmt, ...)                                                        \
   assert(log_fp != NULL);                                                      \
-  char *to_log = strcat(get_log_prefix(strlen(fmt)), fmt);                     \
+  to_log = strcat(get_log_prefix(strlen(fmt)), fmt);                           \
   to_log = strcat(to_log, "\n");                                               \
   fprintf(log_fp, to_log, ##__VA_ARGS__);                                      \
   fprintf(stderr, to_log, ##__VA_ARGS__);                                      \
@@ -37,7 +39,7 @@ FILE *log_fp;
 // p_log is the same as s_log but pedantic
 #define p_log(fmt, ...)                                                        \
   assert(log_fp != NULL);                                                      \
-  char *to_log = strcat(get_pedantic_log_prefix(strlen(fmt)), fmt);            \
+  to_log = strcat(get_pedantic_log_prefix(strlen(fmt)), fmt);                  \
   to_log = strcat(to_log, "\n");                                               \
   fprintf(log_fp, to_log, ##__VA_ARGS__);                                      \
   fprintf(stderr, to_log, ##__VA_ARGS__);                                      \
@@ -49,7 +51,7 @@ FILE *log_fp;
 // t_log is logging a testing error
 #define t_log(fmt, ...)                                                        \
   assert(log_fp != NULL);                                                      \
-  char *to_log =                                                               \
+  to_log =                                                                     \
       strcat(get_testing_log_prefix(strlen(fmt), __LINE__, __FILE__), fmt);    \
   to_log = strcat(to_log, "\n");                                               \
   fprintf(log_fp, to_log, ##__VA_ARGS__);                                      \
