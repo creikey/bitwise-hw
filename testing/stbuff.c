@@ -14,6 +14,8 @@ void test_strbuff() {
   strbuff_append(to_test, to_make[2]);
   if(strcmp(to_make, get_string(to_test)) != 0) {
     printf("Got string (%s) not equal to wanted string (%s)\n", get_string(to_test), to_make);
+  } else {
+    printf("Test strbuff successfull!\n");
   }
 }
 
@@ -26,12 +28,12 @@ strbuff * n_strbuff() {
 }
 
 void strbuff_append(strbuff * buff, char to_append) {
-  printf("Appending %c\n", to_append);
+  // printf("Appending %c\n", to_append);
   if(buff->len >= buff->max_len) {
     buff->max_len *= 2;
     buff->str = realloc(buff->str, buff->max_len);
   }
-  buff->str[buff->len] = to_append;
+  buff->str[buff->len-1] = to_append;
   buff->len++;
 }
 

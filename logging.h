@@ -10,9 +10,10 @@
 typedef enum log_severity { HIGH, MEDIUM, LOW } log_severity;
 
 // get_log_prefix returns the prefix for a standard log
-char *get_log_prefix(int);
+char *get_log_prefix(int size_of_line, int log_line, const char *file_name);
 // get_pedantic_log_prefix returns the prefix for a standard log
-char *get_pedantic_log_prefix(int size_of_line);
+char *get_pedantic_log_prefix(int size_of_line, int log_line,
+                              const char *file_name);
 // get_testing_log_prefix returns the prefix for a testing log
 char *get_testing_log_prefix(int size_of_line, int log_line,
                              const char *file_name);
@@ -26,7 +27,7 @@ char *to_log;
 // s_log is a standard function to print to stderr and log
 #define s_log(fmt, ...)                                                        \
   assert(log_fp != NULL);                                                      \
-  to_log = strcat(get_log_prefix(strlen(fmt)), fmt);                           \
+  to_log = strcat(get_log_prefix(strlen(fmt), __LINE__, __FILE__), fmt);       \
   to_log = strcat(to_log, "\n");                                               \
   fprintf(log_fp, to_log, ##__VA_ARGS__);                                      \
   fprintf(stderr, to_log, ##__VA_ARGS__);                                      \
@@ -39,7 +40,8 @@ char *to_log;
 // p_log is the same as s_log but pedantic
 #define p_log(fmt, ...)                                                        \
   assert(log_fp != NULL);                                                      \
-  to_log = strcat(get_pedantic_log_prefix(strlen(fmt)), fmt);                  \
+  to_log =                                                                     \
+      strcat(get_pedantic_log_prefix(strlen(fmt), __LINE__, __FILE__), fmt);   \
   to_log = strcat(to_log, "\n");                                               \
   fprintf(log_fp, to_log, ##__VA_ARGS__);                                      \
   fprintf(stderr, to_log, ##__VA_ARGS__);                                      \

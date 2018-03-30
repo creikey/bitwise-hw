@@ -22,28 +22,28 @@ void close_logging() {
 }
 #endif // LOG_DEBUG_MODE
 
-char * get_log_prefix(int size_of_line) {
+char * get_log_prefix(int size_of_line, int log_line, const char * file_name) {
   char * to_return = malloc((size_of_line + sizeof(*to_return)) * 100);
   time_t rawtime;
   struct tm * timeinfo;
   time ( &rawtime );
   timeinfo = localtime( &rawtime );
-  sprintf(to_return, "[ %s ] ", strtok(asctime(timeinfo), "\n"));
+  sprintf(to_return, "[ Line %d File %s | %s ] ", log_line, file_name, strtok(asctime(timeinfo), "\n"));
   return to_return;
 }
 
-char * get_pedantic_log_prefix(int size_of_line) {
+char * get_pedantic_log_prefix(int size_of_line, int log_line, const char * file_name) {
   char * to_return = malloc((size_of_line + sizeof(*to_return)) * 100);
   time_t rawtime;
   struct tm * timeinfo;
   time ( &rawtime );
   timeinfo = localtime( &rawtime );
-  sprintf(to_return, "...[ %s ] ", strtok(asctime(timeinfo), "\n"));
+  sprintf(to_return, "...[ Line %d File %s | %s ] ", log_line, file_name, strtok(asctime(timeinfo), "\n"));
   return to_return;
 }
 
 char * get_testing_log_prefix(int size_of_line, int log_line, const char * file_name) {
   char * to_return = malloc((size_of_line + sizeof(*to_return)) * 100);
-  sprintf(to_return, "Test failed | [ LINE: %d FILE: (%s) ] | ", log_line, file_name);
+  sprintf(to_return, "Test log | [ LINE: %d FILE: (%s) ] | ", log_line, file_name);
   return to_return;
 }

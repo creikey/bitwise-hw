@@ -12,63 +12,85 @@ const char *token_kind_names[] = {[SQUIG] = "~",        [MULTIPLY] = "*",
                                   [RIGHT_SHIFT] = ">>", [LEFT_SHIFT] = "<<",
                                   [BIN_AND] = "&",      [ADD] = "+",
                                   [SUBTRACT] = "-",     [BIN_OR] = "|",
-                                  [POW] = "^"};
+                                  [POW] = "^", [UNKNOWN] = "?jdklfjdlsfj"};
 
-arr_token tokenize(char * to_tokenize) {
-  // to_return is the arr token to return
-  arr_token to_return;
-  // set arr_token to zero values
-  to_return.len = 0;
-  to_return.toks = NULL;
-  // check to see if input string is null
+arr_token tokenize(const char * to_tokenize) {
+  p_log("Starting to tokenize %s\n", to_tokenize);
+  arr_token to_return = {0,0,0}; // to_return is a zero value array of tokens
   if(to_tokenize == NULL) {
+    s_log("received null value in function %s\n", __FUNCTION__);
     return to_return;
   }
-  // make toks an array of malloc equal to one token
-  to_return.toks = malloc(sizeof(*to_return.toks));
-  // cur is a variable that holds the current token
-  token cur;
-  // cur_tok_kind is a variable that holds the current token kind
-  token_kind cur_tok_kind;
-  // max_tok_len is the maximum character length of any token
-  int max_tok_len = get_max_tok_len(token_kind_names);
-  // cur_str is the current string to ber passed to get_toke_kind
-  char * cur_str = malloc(sizeof(*cur_str) * (max_tok_len+1));
-  // loop over the input string
-  for( unsigned int  i = 0; i < strlen(to_tokenize); i++ ) {
-    // ii is the iterator for the cur_tok_kind loop
-    unsigned int ii;
-    // loop over possible amount of characters
-    for( ii = 1; ii <= max_tok_len; ii++ ) {
-      strncpy(cur_str, to_tokenize, ii); // copy string into buffer
-      cur_str[ii] = 0; // null terminate string
-      cur_tok_kind = get_token_kind(cur_str); // get the token kind
-      if(cur_tok_kind != UNKNOWN) { // if it's not unknown, exit the for loop
-        break;
+  int max_tok_len = get_max_tok_len(token_kind_names); // maximum token length
+  unsigned int tok_cur = 0; // current character in the string
+  char * cur_str; // current string in the to_tokenize string
+  /* make size of max length + 1 for safety */
+  int cur_str_size = sizeof(*cur_str)*max_tok_len+1;
+  cur_str = malloc(cur_str_size);
+  memset(cur_str, '\0', cur_str_size-1); // set the string to null
+  int look_ahead = 1; // current look ahead for cur_str
+  token cur_token; // current token
+  p_log("tok cur is %d, to_tokenize len is %d\n", tok_cur, strlen(to_tokenize));
+  while(tok_cur < strlen(to_tokenize)) { // iterate over tokenization string
+    p_log("token cursor at %d, look ahead at %d", tok_cur, look_ahead);
+    /* set the string specified by look_ahead to cur_str */
+    memset(cur_str, '\0', cur_str_size); // set the string to null
+    strncpy(cur_str, to_tokenize, look_ahead);
+    p_log("successfully set the cur_str to %s\n", cur_str);
+    /* iterate through the token_kind_names array and set the current token */
+    for(unsigned int i = FIRST_TOKEN_KIND; i < LAST_TOKEN_KIND; i++) {
+      if(token_kind_names[i] != NULL ) {
+        p_log("Searching for tokens on index %d, current token kind: %s\n", i, token_kind_names[i]);
+        if(strcmp(cur_str, token_kind_names[i]) == 0) {
+          p_log("token found! Name %s\n", token_kind_names[i]);
+          cur_token.kind = (token_kind)i;
+          break; // exit the loop if a token's been found
+        }
       }
     }
-    if( cur_tok_kind == UNKNOWN ) {
-      s_log("Unknown token %s", cur_str);
-    } else if( cur_tok_kind == NUMBER ) {
-      // set the curren token's val
-      cur.val = resolve_numb(to_tokenize, i);
-    i += ii; // advance the current counter so it's the token ahead
+    // cur_token.kind = UNKNOWN;
+    p_log("current token name is %s\n", token_kind_names[cur_token.kind]);
+    if(cur_token.kind == UNKNOWN) { // if the token's unknown
+      p_log("token kind unknown");
+      if(look_ahead > max_tok_len) { // if the look ahead is greater than max
+        s_log("Token still unknown after look ahead %d\n", look_ahead)
+        tok_cur += look_ahead+1; // zoom past unknown token shit (miss me w dat)
+        look_ahead = 1;
+      } else {
+        look_ahead++;
+      }
+    } else { // if the token's kind has been found
+      p_log("Token found with ID: %s, val: %d", token_kind_names[cur_token.kind], cur_token.val);
+      look_ahead = 0; // reset look ahead
+      if(cur_token.kind == NUMBER) { // if it's a number, resolve and look ahead
+        cur_token.val = resolve_numb(to_tokenize, tok_cur);
+        tok_cur += num_places(cur_token.val); // zoom ahead of the number
+      } else {
+        tok_cur += strlen(token_kind_names[cur_token.kind]); // zoom ahead of token
+      }
+      append_token(to_return, cur_token); // append the token
+      cur_token.kind = UNKNOWN;
+      cur_token.val = 0;
+    }
   }
   return to_return;
 }
 
 int get_max_tok_len(const char ** to_find_max_len) {
   unsigned int cur_max_len = 0;
-  for(unsigned int i = 0; i < sizeof(to_find_max_len)*sizeof(*to_find_max_len); i++) {
-    if(strlen(to_find_max_len[i]) > cur_max_len) {
-      cur_max_len = strlen(to_find_max_len[i]);
+  for(unsigned int i = FIRST_TOKEN_KIND; i < LAST_TOKEN_KIND; i++) {
+    if(to_find_max_len[i] != NULL) {
+      if(strlen(to_find_max_len[i]) > cur_max_len) {
+        p_log("Found string %s with token length %d at index %d\n", to_find_max_len[i], strlen(to_find_max_len[i]), i);
+        cur_max_len = strlen(to_find_max_len[i]);
+      }
     }
   }
   return cur_max_len;
 }
 
 // TODO add negative support
-int resolve_numb( char * charstream, int cur ) {
+int resolve_numb( const char * charstream, int cur ) {
   // to_return is a variable that holds the number to return
   int to_return;
   // ishift is a variable holding the amount of left shift on base 10 needed
@@ -136,6 +158,12 @@ int num_places (int n) {
 }
 
 void append_token(arr_token to_append_to, token to_append) {
+  if(to_append_to.toks == NULL || to_append_to.len == 0 || to_append_to.max_len == 0) {
+    to_append_to.toks = malloc(sizeof(*to_append_to.toks)*1);
+    to_append_to.len = 1;
+    to_append_to.max_len = 1;
+    return;
+  }
   // if the current length is greater or equal to the maximum length
   if( to_append_to.len >= to_append_to.max_len ) {
     // resize the array of tokens to twice its max size
