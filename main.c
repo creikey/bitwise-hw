@@ -1,29 +1,35 @@
 #include <stdio.h>
-#include <assert.h>
-#include <stdarg.h>
+#include <string.h>
+#include "config.h"
+#include "stbuff.h"
+#include "file_helper.h"
+#include "tokens.h"
+#include <ctesting/testing.h>
 
-#include "logging.h"
-#include "tokenizer.h"
 
-// ptree_node is a tree of a parse tree
-typedef struct ptree_node {
-  struct ptree_node * right;
-  struct ptree_node * left;
-  token_kind tok;
-} ptree_node;
-
-const char * parse_expr(char * to_parse) {
-  s_log("Parsing expression %s", to_parse);
-  return to_parse;
-}
-
-int main( int argc, char ** argv ) {
-  init_logging(LOG_FILE);
-  if( argc < 2 ) {
-    s_log("No input from user");
-    printf("[first arg] -- string to parse\n");
-  } else {
-    printf("%s\n", parse_expr(argv[1]));
+int main(int argc, char ** argv) {
+  t_init();
+  test_stbuff();
+  // test_number_token();
+  test_tokens();
+  t_end();
+  FILE * fp = fopen(TO_READ, "r");
+  if(fp == NULL) {
+    printf("Cannot read file %s\n", TO_READ);
+    return -1;
   }
-  close_logging();
+  char * cur_line = read_line(fp);
+  int line = 1;
+  while(cur_line != NULL) {
+    printf("Reading (%s) from file %s...\n", cur_line, TO_READ);
+    cur_line = read_line(fp);
+    if( cur_line == NULL) {
+      printf("Done!\n");
+      break;
+    }
+    tokbuff * toks = tokenize(cur_line, line, strlen(cur_line));
+     print_tokens(toks);
+    line++;
+  }
+  return 0;
 }

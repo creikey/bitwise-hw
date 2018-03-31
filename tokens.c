@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
-#include "testing.h"
+#include <ctesting/testing.h>
 #include "number_token.h"
 
 void test_tokens() {

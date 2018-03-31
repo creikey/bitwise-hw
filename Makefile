@@ -3,7 +3,7 @@ CFILES=*.c
 .PHONY: clean
 
 main: ofiles
-	gcc *.o
+	gcc *.o -lctesting
 
 debug: ofiles
 	gcc *.o -g
