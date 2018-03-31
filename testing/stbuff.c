@@ -1,22 +1,23 @@
 #include "stbuff.h"
+#include "testing.h"
 #include <malloc.h>
 #include <string.h>
 
 void test_stbuff() {
+  t_start_suit("stbuff");
   test_strbuff();
+  t_end_suit();
 }
 
 void test_strbuff() {
+  t_start_test("strings");
   const char * to_make = "ass";
   strbuff * to_test = n_strbuff();
   strbuff_append(to_test, to_make[0]);
   strbuff_append(to_test, to_make[1]);
   strbuff_append(to_test, to_make[2]);
-  if(strcmp(to_make, get_string(to_test)) != 0) {
-    printf("Got string (%s) not equal to wanted string (%s)\n", get_string(to_test), to_make);
-  } else {
-    printf("Test strbuff successfull!\n");
-  }
+  T_ASSERT(strcmp(to_make, get_string(to_test)) == 0);
+  t_end_test();
 }
 
 strbuff * n_strbuff() {

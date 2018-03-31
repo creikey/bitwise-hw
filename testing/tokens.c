@@ -3,6 +3,14 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include "testing.h"
+#include "number_token.h"
+
+void test_tokens() {
+  t_start_suit("tokens");
+  test_number_token();
+  t_end_suit();
+}
 
 tokbuff * tokenize(char * to_tokenize, int line, size_t length) {
   tokbuff * to_return = n_tokbuff();

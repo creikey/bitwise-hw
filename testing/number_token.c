@@ -1,4 +1,5 @@
 #include "number_token.h"
+#include "testing.h"
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
@@ -36,17 +37,13 @@ token parse_number(char *to_parse, int cur, size_t length) {
 }
 
 void test_number_token() {
+  t_start_test("number tokens");
   const char * to_test_const = "4234";
   char * to_test = malloc(sizeof(*to_test)*strlen(to_test_const)+1);
   strcpy(to_test, to_test_const);
   int actual = 4234;
   token got = parse_number(to_test, 0, 4);
-  if(*(int*)got.data != actual) {
-    printf("number_token test failed: got (%d), wanted (%d)\n", *(int*)got.data, actual);
-  } else {
-    printf("number_token test passed!\n");
-  }
-  if(got.char_len != 4) {
-    printf("number_token test failed: got length (%lu), wanted (%d)\n", got.char_len, 4);
-  }
+  T_ASSERT(*(int*)got.data == actual);
+  T_ASSERT(got.char_len == 4);
+  t_end_test();
 }
