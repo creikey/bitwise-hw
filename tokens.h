@@ -1,6 +1,7 @@
 #ifndef H_TOKENS
 #define H_TOKENS
 
+#include <stdbool.h>
 #include <stddef.h>
 
 typedef enum token_type { SYMBOL, NUMBER, UNKNOWN } token_type;
@@ -31,5 +32,11 @@ void print_tokens(tokbuff *to_print);
 tokbuff *tokenize(char *to_tokenize, int line, size_t length);
 
 void test_tokens();
+
+void test_cmptok();
+
+void test_tokbuff();
+
+bool cmptok(token left, token right);
 
 #endif // H_TOKENS
