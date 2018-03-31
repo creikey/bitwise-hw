@@ -4,13 +4,13 @@
 #include "stbuff.h"
 #include "file_helper.h"
 #include "tokens.h"
+#include "test.h"
 #include <ctesting/testing.h>
 
 
 int main(int argc, char ** argv) {
   t_init();
   test_stbuff();
-  // test_number_token();
   test_tokens();
   t_end();
   FILE * fp = fopen(TO_READ, "r");

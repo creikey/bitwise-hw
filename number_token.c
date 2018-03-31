@@ -22,10 +22,6 @@ token parse_number(char *to_parse, int cur, size_t length) {
   int * cur_numb = malloc( sizeof *cur_numb );
   *cur_numb = 0;
   token to_return = (token) {NUMBER, num_len, cur_numb};
-  /*for(int i = num_len; i >= 0; i--) {
-    *cur_numb += (to_parse[cur+look_ahead]-'0')*(10*i);
-    look_ahead++;
-  }*/
   for (size_t i=cur; i < cur+num_len; i++)
   {
     *cur_numb *= 10;  //left shift 1
@@ -34,16 +30,4 @@ token parse_number(char *to_parse, int cur, size_t length) {
 
   to_return.data = cur_numb;
   return to_return;
-}
-
-void test_number_token() {
-  t_start_test("number tokens");
-  const char * to_test_const = "4234";
-  char * to_test = malloc(sizeof(*to_test)*strlen(to_test_const)+1);
-  strcpy(to_test, to_test_const);
-  int actual = 4234;
-  token got = parse_number(to_test, 0, 4);
-  T_ASSERT(*(int*)got.data == actual);
-  T_ASSERT(got.char_len == 4);
-  t_end_test();
 }

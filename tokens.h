@@ -31,12 +31,10 @@ void print_tokens(tokbuff *to_print);
 // tokenize returns a token array of input
 tokbuff *tokenize(char *to_tokenize, int line, size_t length);
 
-void test_tokens();
-
-void test_cmptok();
-
-void test_tokbuff();
-
 bool cmptok(token left, token right);
+
+void free_token(token to_free);
+
+void free_tokbuff(tokbuff *to_free);
 
 #endif // H_TOKENS

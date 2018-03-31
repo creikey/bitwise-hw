@@ -6,14 +6,6 @@
 #include <ctesting/testing.h>
 #include "number_token.h"
 
-void test_tokens() {
-  t_start_suit("tokens");
-  test_number_token();
-  test_tokbuff();
-  test_cmptok();
-  t_end_suit();
-}
-
 tokbuff * tokenize(char * to_tokenize, int line, size_t length) {
   tokbuff * to_return = n_tokbuff();
   size_t cur = 0;
@@ -36,44 +28,6 @@ tokbuff * tokenize(char * to_tokenize, int line, size_t length) {
     append_token(to_return, tok);
   }
   return to_return;
-}
-
-void test_tokbuff() {
-  t_start_test("tokbuff");
-  tokbuff * actual = malloc(sizeof *actual);
-  actual->data = malloc(sizeof *actual->data * 2);
-  actual->len = 2;
-  actual->max_len = 2;
-  int first_data = 5;
-  int second_data = 6;
-  actual->data[0] = (token) {SYMBOL, 2, &first_data};
-  actual->data[1] = (token) {NUMBER, 1, &second_data};
-  tokbuff * got = n_tokbuff();
-  append_token(got, (token) {SYMBOL, 2, &first_data});
-  append_token(got, (token) {NUMBER, 1, &second_data});
-  T_ASSERT(actual->len == got->len);
-  T_ASSERT(actual->max_len == got->max_len);
-  T_ASSERT(cmptok(actual->data[0], get_token(got, 0)));
-  T_ASSERT(cmptok(actual->data[1], get_token(got, 1)));
-  t_end_test();
-}
-
-void test_cmptok() {
-  t_start_test("cmptok");
-  int raw_left_data = 3;
-  int raw_right_data = 4;
-  int * left_data = &raw_left_data;
-  int * right_data = &raw_right_data;
-  token tok1 = (token) {SYMBOL, 2, &left_data};
-  token tok2 = (token) {SYMBOL, 2, &right_data};
-  T_ASSERT(cmptok(tok1, tok2) == false);
-  *left_data = *right_data;
-  T_ASSERT(cmptok(tok1, tok2) == true);
-  tok1.type = NUMBER;
-  T_ASSERT(cmptok(tok1, tok2) == false);
-  tok1.type = SYMBOL;
-  T_ASSERT(cmptok(tok1, tok2) == true);
-  t_end_test();
 }
 
 bool cmptok(token left, token right) {
@@ -152,4 +106,17 @@ void print_tokens(tokbuff *to_print) {
 
   }
   printf("\n");
+}
+
+void free_token(token to_free) {
+  if(to_free.type != UNKNOWN) {
+    free(to_free.data);
+  }
+}
+
+void free_tokbuff(tokbuff * to_free) {
+  for(size_t i = 0; i < to_free->len; i++) {
+    free_token(get_token(to_free, i));
+  }
+  free(to_free);
 }
