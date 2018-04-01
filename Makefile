@@ -5,8 +5,9 @@ CFILES=*.c
 main: ofiles
 	gcc *.o -lctesting
 
-debug: ofiles
-	gcc *.o -g
+debug:
+	gcc -c $(CFILES) -Wall -g
+	gcc *.o -g -lctesting
 
 ofiles: $(CFILES)
 	gcc -c $(CFILES) -Wall
@@ -14,3 +15,4 @@ ofiles: $(CFILES)
 clean:
 	-rm *.o
 	-rm *.gch
+	-rm a.out
