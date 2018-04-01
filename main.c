@@ -23,14 +23,14 @@ int main(int argc, char ** argv) {
   int line = 1;
   while(cur_line != NULL) {
     printf("Reading (%s) from file %s...\n", cur_line, TO_READ);
+    tokbuff * toks = tokenize(cur_line, line, strlen(cur_line));
+     print_tokens(toks);
+    line++;
     cur_line = read_line(fp);
     if( cur_line == NULL) {
       printf("Done!\n");
       break;
     }
-    tokbuff * toks = tokenize(cur_line, line, strlen(cur_line));
-     print_tokens(toks);
-    line++;
   }
   return 0;
 }
