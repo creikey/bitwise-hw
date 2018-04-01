@@ -6,13 +6,14 @@
 #include "tokens.h"
 #include "test.h"
 #include <ctesting/testing.h>
+#include <assert.h>
 
 
 int main(int argc, char ** argv) {
   t_init();
   test_stbuff();
   test_tokens();
-  t_end();
+  assert(t_end() != -1);
   FILE * fp = fopen(TO_READ, "r");
   if(fp == NULL) {
     printf("Cannot read file %s\n", TO_READ);
