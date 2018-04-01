@@ -34,12 +34,14 @@ void test_tokbuff() {
 
 void test_cmptok() {
   t_start_test("cmptok");
-  int raw_left_data = 3;
-  int raw_right_data = 4;
-  int * left_data = &raw_left_data;
-  int * right_data = &raw_right_data;
-  token tok1 = (token) {SYMBOL, 2, &left_data};
-  token tok2 = (token) {SYMBOL, 2, &right_data};
+  // int raw_left_data = 3;
+  // int raw_right_data = 4;
+  int * left_data = malloc(sizeof *left_data);
+  int * right_data = malloc(sizeof *right_data);
+  *left_data = 3;
+  *right_data = 4;
+  token tok1 = (token) {SYMBOL, 2, left_data};
+  token tok2 = (token) {SYMBOL, 2, right_data};
   T_ASSERT(cmptok(tok1, tok2) == false);
   *left_data = *right_data;
   T_ASSERT(cmptok(tok1, tok2) == true);
