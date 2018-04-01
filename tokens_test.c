@@ -17,7 +17,7 @@ void test_tokbuff() {
   tokbuff * actual = malloc(sizeof *actual);
   actual->data = malloc(sizeof *actual->data * 2);
   actual->len = 2;
-  actual->max_len = 2;
+  actual->max_len = 4;
   int first_data = 5;
   int second_data = 6;
   actual->data[0] = (token) {SYMBOL, 2, &first_data};

@@ -56,9 +56,9 @@ bool cmptok(token left, token right) {
 
 tokbuff * n_tokbuff() {
   tokbuff * to_return = malloc(sizeof *to_return);
-  to_return->len = 1;
-  to_return->max_len = 1;
-  to_return->data = malloc(sizeof *to_return->data * to_return->len);
+  to_return->len = 0;
+  to_return->max_len = 4;
+  to_return->data = malloc(sizeof *to_return->data * to_return->max_len);
   return to_return;
 }
 
@@ -75,7 +75,7 @@ void append_token(tokbuff *buff, token to_append) {
     memcpy(buff->data, tmp, buff->len-1);
     free(tmp);
   }
-  buff->data[buff->len-1] = to_append;
+  buff->data[buff->len] = to_append;
   buff->len++;
 }
 
