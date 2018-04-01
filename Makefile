@@ -2,15 +2,14 @@ CFILES=*.c
 
 .PHONY: clean
 
-main: ofiles
-	gcc *.o -lctesting
+main: *.o
+	$(CC) $(CFLAGS) *.o -lctesting
 
-debug:
-	gcc -c $(CFILES) -Wall -g
-	gcc *.o -g -lctesting
+debug: clean *.o
+	$(CC) $(CFLAGS) *.o -lctesting -g
 
-ofiles: $(CFILES)
-	gcc -c $(CFILES) -Wall
+*.o: *.c
+	$(CC) $(CFLAGS) -c $^
 
 clean:
 	-rm *.o
