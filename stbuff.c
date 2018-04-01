@@ -6,8 +6,8 @@
 strbuff * n_strbuff() {
   strbuff * to_return = malloc(sizeof *to_return);
   to_return->len = 1;
-  to_return->max_len = 1;
-  to_return->str = malloc(sizeof *to_return->str);
+  to_return->max_len = 4;
+  to_return->str = malloc(to_return->max_len);
   return to_return;
 }
 
@@ -15,7 +15,11 @@ void strbuff_append(strbuff * buff, char to_append) {
   // printf("Appending %c\n", to_append);
   if(buff->len >= buff->max_len) {
     buff->max_len *= 2;
-    buff->str = realloc(buff->str, buff->max_len);
+    //buff->str = realloc(buff->str, buff->max_len*sizeof(*buff->str));
+    char * tmp = buff->str;
+    buff->str = malloc(sizeof * buff->str*buff->max_len);
+    memcpy(buff->str, tmp, buff->len-1);
+    free(tmp);
   }
   buff->str[buff->len-1] = to_append;
   buff->len++;

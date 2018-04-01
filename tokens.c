@@ -70,7 +70,10 @@ void d_tokbuff(tokbuff * to_delete) {
 void append_token(tokbuff *buff, token to_append) {
   if( buff->len >= buff->max_len) {
     buff->max_len *= 2;
-    buff->data = realloc(buff->data, buff->max_len);
+    token * tmp = buff->data;
+    buff->data = malloc(buff->max_len*sizeof(*buff->data));
+    memcpy(buff->data, tmp, buff->len-1);
+    free(tmp);
   }
   buff->data[buff->len-1] = to_append;
   buff->len++;
