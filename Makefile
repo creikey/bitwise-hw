@@ -8,7 +8,7 @@ main: *.o
 debug: clean *.o
 	$(CC) $(CFLAGS) *.o -lctesting -g
 
-*.o: *.c
+%.o: %.c
 	$(CC) $(CFLAGS) -c $^
 
 clean:
