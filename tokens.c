@@ -20,7 +20,7 @@ tokbuff * tokenize(char * to_tokenize, int line, size_t length) {
       // tok = parse_symbol(to_tokenize, cur, length);
     }
     if(tok.type == UNKNOWN) {
-      printf("Unknown token at column %lu, line %d\n", cur, line);
+      printf("Unknown token at column %lu, line %d, character %c\n", cur, line, to_tokenize[cur]);
       cur++;
     } else {
       cur += tok.char_len;
